@@ -3,6 +3,8 @@
 import requests
 from lxml import etree
 from PIL import Image
+import time
+import json
 session=requests.session()
 
 
@@ -63,12 +65,9 @@ class Spider():
         mysql.dispose()
 
 #天津微小企业爬虫举例
-import time
-import json
+
 user_agent='Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0'
 spider=Spider(user_agent)
-
-
 
 captchaUrl='http://www.tjcredit.gov.cn/xwqy/randomCode/generate?time='+str(time) #param={'time'；str(time)},get
 captcha_html,captcha_page=spider.get_html("get",captchaUrl,params={'time':str(time)})
