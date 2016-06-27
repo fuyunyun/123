@@ -180,16 +180,5 @@ class Mysql(object):
 #sql="select * from 重庆　where 注册号=%s"
 #conn=mysql.getOne(sql,strr)
 #print conn
-
-#del conn
-#mysql.dispose()
-##conn = mysql.getAll('select * from link limit 1')
-#sqlo='SELECT count(*) FROM information_schema.tables WHERE table_schema ="court" AND table_name =link'
-##conn = mysql.getAll('show tables;')
-#conn = mysql.getAll(sqlo)
-#print conn
-#for i in range(len(conn)):
-#    print conn[i]['link']
-#del conn
 #mysql.dispose()
 
