@@ -10,11 +10,11 @@ class getAddress():
         self.pageno=1
         self.headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0'}
         self.url='http://www.xicidaili.com/nn/'+str(self.pageno)
-#postdata={'cnzz_eid':'2109631214-1462333134-','h':'1','id':'1256960793','lg':'zh-cn','ntime':str(time.time()),'r':'http://www.xicidaili.com/nn/','rnd':'1594815936','showp':'1920x1080','t':'国内高匿免费HTTP代理IP__第'+str(pageno)+'页国内高匿'}
     def run(self):
         session=requests.session()
         html=session.get(url=self.url,headers=self.headers)
         return html.text
+    """ @获取网站第一页所有IP地址，并修改格式"""
     def getAddr(self,page):
         tree=etree.HTML(page)
         lists=tree.xpath('//table[@id="ip_list"]/tr[@class]')
@@ -25,6 +25,7 @@ class getAddress():
             http=tree.xpath('//table[@id="ip_list"]/tr[@class]['+str(i)+']/td[6]/text()')
             address.append('{"'+http[0].strip().lower()+'":"'+http[0].strip().lower()+'://'+ip[0].strip()+':'+port[0].strip()+'"}')
         return address
+    """@对目标网站进行IP测试，通过就append到chooseAddr中"""
     def chooseAddr(self,testUrl,address):
         chooseAddr=[]
         session=requests.session()
@@ -36,12 +37,14 @@ class getAddress():
                 print e
                 print addr
         return chooseAddr
-testUrl='http://gsxt.scaic.gov.cn/xxcx.do?method=ycmlIndex&random='+str(int(time.time()))+'&cxyzm=no&entnameold=&djjg=&maent.entname=&page.currentPageNo=1&yzm='
-getADDR=getAddress()
-address=getADDR.getAddr(getADDR.run())
-chooseAddr=getADDR.chooseAddr(testUrl=testUrl,address=address)
-print chooseAddr
-#print address
+        
+if __name__=='__main__':
+    testUrl='http://gsxt.scaic.gov.cn/xxcx.do?method=ycmlIndex&random='+str(int(time.time()))+'&cxyzm=no&entnameold=&djjg=&maent.entname=&page.currentPageNo=1&yzm='
+    getADDR=getAddress()
+    address=getADDR.getAddr(getADDR.run())
+    chooseAddr=getADDR.chooseAddr(testUrl=testUrl,address=address)
+    print chooseAddr
+
 
 
 
