@@ -7,7 +7,6 @@ import time
 import requests
 rawProxyList = []
 checkedProxyList = []
-
 #抓取代理网站
 targets=[]
 for i in range(1,3):
@@ -47,8 +46,9 @@ class ProxyCheck(threading.Thread):
         threading.Thread.__init__(self)
         self.proxyList = proxyList
         self.timeout=5
+        self.data={'entNameOrRegNo':'浙江','pagination.currentPage':1,'pagination.pageSize':'10'}
         self.testUrl = "http://gsxt.zjaic.gov.cn/small/doReadSmallEntDirInfoListJSON.do"
-        self.testStr = "浙江"
+        self.testStr = "pages"
 
     def checkProxy(self):
         session=requests.session()
@@ -56,17 +56,16 @@ class ProxyCheck(threading.Thread):
             t1 = time.time()
             proxies={"http" : r'http://%s:%s' %(proxy[0],proxy[1])}
             try:
-                req=session.get(url=self.testUrl,proxies=proxies,headers=headers,timeout=self.timeout)
+                req=session.get(url=self.testUrl,proxies=proxies,headers=headers,timeout=self.timeout,data=self.data)
                 #req = opener.open(self.testUrl,timeout=self.timeout)
                 #result=req.read()
                 result=req.text
-                print req
                 timeused = time.time()-t1
-                pos = result.find(self.testStr)
-
-                if pos > 1:
+                #pos = result.find(self.testStr)
+                #print pos
+                #if pos > 1:
+                if "200" in str(req):
                     checkedProxyList.append((proxy[0],proxy[1],proxy[2],timeused))
-                    print checkedProxyList
                 else:
                     continue
             except Exception,e:
@@ -103,10 +102,17 @@ for i in range(len(checkThreads)):
     checkThreads[i].join()
 
 print '.'*10+"总共有%s个代理通过校验" %len(checkedProxyList) +'.'*10
-
+proxiesF="{"
 #持久化
+for i in range(len(checkedProxyList)):
+    proxy0=checkedProxyList[i][0]
+    proxy1=checkedProxyList[i][1]
+    if i==len(checkedProxyList)-1:
+        proxiesF=proxiesF+'"http": "http://%s:%s"' %(proxy0,proxy1)
+    else:
+        proxiesF=proxiesF+'"http":"http://%s:%s",' %(proxy0,proxy1)
+proxiesF=proxiesF+"}"
+print proxiesF
 f= open("proxy_list.txt",'w+')
-for proxy in sorted(checkedProxyList,cmp=lambda x,y:cmp(x[3],y[3])):
-    print "checked proxy is: %s:%s\t%s\t%s" %(proxy[0],proxy[1],proxy[2],proxy[3])
-    f.write("%s:%s\t%s\t%s\n"%(proxy[0],proxy[1],proxy[2],proxy[3]))
+f.write(str(proxiesF))
 f.close()
