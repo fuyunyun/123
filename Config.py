@@ -1,8 +1,8 @@
-DBHOST='192.168.201.210'
+DBHOST='192.168.201.200
 DBPORT=3306
 DBUSER='root'
 DBPWD='root'
-DBNAME='xw'
+DBNAME='mysql'
 DBCHAR='utf8'
 threadsnum=30
 savepath='/court_app'
