@@ -4,7 +4,7 @@ from lxml import etree
 import dbutil
 import sys
 import threading
-
+""" 多线程爬取"""
 reload(sys)
 sys.setdefaultencoding('utf-8')
 session=requests.session()
